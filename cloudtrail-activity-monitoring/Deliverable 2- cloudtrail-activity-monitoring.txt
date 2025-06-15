@@ -1,0 +1,54 @@
+﻿# Deliverable 002 – AWS CloudTrail Logging & SOC Event Analysis
+
+
+**Date Completed:** June 15, 2025  
+**Environment:** AWS Practice Account, Kali Linux VM  
+**AWS Services Used:** CloudTrail, S3, IAM  
+**Logging Target:** S3 Bucket `cloudtrail-logs-simi-001`
+
+
+---
+
+
+## 🎯 Objective
+
+
+To enable CloudTrail in a multi-region setup and log all account activity into a dedicated S3 bucket. This includes capturing CLI/API calls, console actions, and IAM changes for review and incident detection, like a Security Operations Center (SOC) analyst would.
+
+
+---
+
+
+## 🛠️ Steps Performed
+
+
+1. **Created a new CloudTrail trail**
+   - Name: `practice-cloudtrail-001`
+   - Applied to all regions
+   - Logs stored in: `cloudtrail-logs-simi-001`
+
+
+2. **Generated cloud activity:**
+   ```bash
+   aws s3 ls --profile practice
+   aws s3 cp test.txt s3://s3-practice-simi-001 --profile practice
+   aws ec2 describe-regions --profile practice
+
+
+## 🔍 Sample Events Observed
+
+
+While reviewing the **Event History** in AWS CloudTrail, I confirmed that the following key activities were captured and logged successfully:
+
+
+| Event Name         | Description                                                                 |
+|--------------------|-----------------------------------------------------------------------------|
+| CreateTrail        | Enabled logging for all regions in the account                              |
+| PutBucketPolicy    | Applied permissions to allow CloudTrail to write to the log S3 bucket       |
+| CreateBucket       | Created the destination S3 bucket to hold logs                              |
+| CreateAccessKey    | Created access keys for CLI use (part of IAM test)                          |
+| EnableMFADevice    | Enabled MFA for the IAM user (security hardening)                           |
+
+
+### ✅ Log Visibility Confirmed:
+All of these events were logged under the `root` user in my practice account — showing that CloudTrail captured management-level actions. In a real SOC environment, root usage is avoided, but this lab used it for full visibility while learning.
